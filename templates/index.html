@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sales Dashboard | Monthly Performance</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    .card-icon { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; font-size: 1.35rem; margin-bottom: 0.5rem; }
+    .icon-bg { opacity: 0.15; }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/">
+      <span class="mark">$</span>
+      <span>Sales&nbsp;Dashboard</span>
+    </a>
+    <div class="meta" id="updatedMeta">Updated: <span id="updatedVal">--</span></div>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">&#9728;</button>
+  </header>
+
+  <div class="container">
+    <div>
+      <h1 class="page-title">Sales Performance Overview</h1>
+      <p class="page-sub">September 2025 &rarr; March 2026 &nbsp;|&nbsp; All figures aggregated from monthly sheets</p>
+    </div>
+
+    <!-- KPI Cards -->
+    <div class="kpi-grid" id="kpiGrid"></div>
+
+    <!-- Charts -->
+    <div class="section">
+      <h2><span class="card-icon icon-bg">&#128200;</span>Trends</h2>
+    </div>
+    <div class="chart-grid">
+      <div class="chart-card">
+        <h3><span class="card-icon icon-bg">&#128206;</span>Monthly Total Trend</h3>
+        <div class="chart-wrap"><canvas id="trendChart"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3><span class="card-icon icon-bg">&#128204;</span>Collection vs Credit vs Debit</h3>
+        <div class="chart-wrap"><canvas id="mixChart"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3><span class="card-icon icon-bg">&#128197;</span>Performance by Day of Week</h3>
+        <div class="chart-wrap"><canvas id="weekdayChart"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3><span class="card-icon icon-bg">&#128202;</span>Monthly Totals</h3>
+        <div class="chart-wrap"><canvas id="monthlyBarChart"></canvas></div>
+      </div>
+    </div>
+
+    <!-- Tables -->
+    <div class="section">
+      <h2><span class="card-icon icon-bg">&#128197;</span>Monthly Breakdown</h2>
+      <span class="chip">Workbook order</span>
+    </div>
+    <div class="table-wrap">
+      <table id="monthlyTable">
+        <thead>
+          <tr>
+            <th>Month</th><th>Days</th><th class="num">Collection</th><th class="num">Credit</th><th class="num">Debit</th><th class="num">Total</th><th class="num">Avg/Day</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div class="section" style="display:flex; align-items:center; justify-content:space-between; gap:1rem;">
+      <h2><span class="card-icon icon-bg">&#128200;</span>Recent Transactions</h2>
+      <h2 style="margin:0;"><span class="card-icon icon-bg">&#128177;</span>Top Performing Days</h2>
+    </div>
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap:1.25rem; margin-bottom:2rem;">
+      <div class="table-wrap" style="height: fit-content;">
+        <table id="recentTable">
+          <thead>
+            <tr>
+              <th>Date</th><th>Day</th><th class="num">Collection</th><th class="num">Credit</th><th class="num">Debit</th><th class="num">Total</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="table-wrap">
+        <table id="topTable">
+          <thead>
+            <tr>
+              <th>Date</th><th>Day</th><th class="num">Collection</th><th class="num">Credit</th><th class="num">Debit</th><th class="num">Total</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="empty mt-2" id="emptyState" style="display:none;">
+      No data available.
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+  <script>
+    window.DATA = {{ data | safe }};
+  </script>
+</body>
+</html>

@@ -1,0 +1,192 @@
+/* ============================================================
+   Sales Dashboard — Modern glassmorphism stylesheet
+   ============================================================ */
+:root {
+  --primary: #6366f1;
+  --primary-hover: #4f46e5;
+  --primary-light: #eef2ff;
+  --accent: #10b981;
+  --accent-light: #d1fae5;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+  --info: #3b82f6;
+  --bg: #f8fafc;
+  --card: #ffffff;
+  --text: #0f172a;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
+  --shadow: 0 10px 30px -10px rgba(2, 6, 23, 0.08);
+  --shadow-sm: 0 4px 12px -6px rgba(2, 6, 23, 0.05);
+  --radius: 16px;
+  --radius-sm: 8px;
+  --transition: 0.25s ease;
+}
+.dark {
+  --bg: #0b1021;
+  --card: #121933;
+  --text: #e2e8f0;
+  --text-muted: #94a3b8;
+  --border: #1e293b;
+  --primary: #818cf8;
+  --primary-light: #1e1b4b;
+  --shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.45);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  transition: background 0.3s, color 0.3s;
+}
+
+/* ---------- Header ---------- */
+.topbar {
+  position: sticky; top: 0; z-index: 50;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1rem 1.5rem;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  transition: background 0.3s;
+}
+.dark .topbar { background: rgba(11, 16, 33, 0.7); }
+.brand {
+  display: flex; align-items: center; gap: 0.75rem;
+  font-size: 1.25rem; font-weight: 700; letter-spacing: -0.5px;
+  color: var(--text); text-decoration: none;
+}
+.brand .mark {
+  width: 34px; height: 34px; border-radius: 10px;
+  background: linear-gradient(135deg, var(--primary), #a855f7);
+  display: grid; place-items: center; color: #fff; font-weight: 800;
+}
+.topbar .meta { font-size: 0.875rem; color: var(--text-muted); }
+.theme-toggle {
+  background: var(--card); border: 1px solid var(--border);
+  color: var(--text); width: 38px; height: 38px;
+  border-radius: 10px; cursor: pointer;
+  display: grid; place-items: center; font-size: 1.15rem;
+  transition: transform var(--transition), background var(--transition);
+}
+.theme-toggle:hover { transform: rotate(15deg) scale(1.05); }
+
+/* ---------- Layout ---------- */
+.container { max-width: 1300px; margin: 0 auto; padding: 1.5rem; }
+.page-title {
+  font-size: 2rem; font-weight: 800; letter-spacing: -1px;
+  margin-bottom: 0.25rem; color: var(--text);
+}
+.page-sub { color: var(--text-muted); font-size: 1rem; margin-bottom: 2rem; }
+
+/* ---------- KPI Cards ---------- */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 1.125rem; margin-bottom: 2.25rem;
+}
+.kpi-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 1.25rem 1.5rem;
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+  display: flex; flex-direction: column; gap: 0.5rem;
+}
+.kpi-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow); border-color: var(--primary);
+}
+/* ---------- Section headers ---------- */
+.section {
+  display: flex; align-items: center; justify-content: space-between;
+  margin: 2.5rem 0 1rem;
+}
+.section h2 {
+  font-size: 1.125rem; font-weight: 700; color: var(--text);
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.section .chip {
+  font-size: 0.75rem; padding: 0.15rem 0.6rem; border-radius: 20px;
+  background: var(--primary-light); color: var(--primary); border: 1px solid var(--border);
+  font-weight: 600;
+}
+
+/* ---------- Grid for charts ---------- */
+.chart-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+  gap: 1.25rem; margin-bottom: 2rem;
+}
+.chart-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 1.25rem;
+  box-shadow: var(--shadow-sm); transition: transform var(--transition);
+}
+.chart-card:hover { transform: translateY(-2px); }
+.chart-card h3 {
+  font-size: 1rem; font-weight: 700; margin-bottom: 1rem;
+  color: var(--text); display: flex; align-items: center; gap: 0.5rem;
+}
+.chart-wrap { position: relative; height: 300px; width: 100%; }
+
+/* ---------- Tables ---------- */
+.table-wrap {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 1.25rem;
+  box-shadow: var(--shadow-sm); overflow-x: auto;
+}
+table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+th {
+  text-align: left; padding: 0.75rem; color: var(--text-muted);
+  font-weight: 700; text-transform: uppercase; font-size: 0.7rem;
+  letter-spacing: 0.4px; border-bottom: 1px solid var(--border);
+}
+td { padding: 0.75rem; border-bottom: 1px solid var(--border); color: var(--text); }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: rgba(99, 102, 241, 0.04); }
+.num { text-align: right; font-variant-numeric: tabular-nums; }
+.badge {
+  display: inline-block; padding: 0.15rem 0.55rem; border-radius: 10px;
+  font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+.badge-good { background: var(--accent-light); color: #065f46; }
+.badge-neutral { background: var(--primary-light); color: #4338ca; }
+
+/* ---------- Empty / helper ---------- */
+.empty { text-align: center; color: var(--text-muted); padding: 2rem; }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 768px) {
+  .container { padding: 1rem; }
+  .kpi-grid { grid-template-columns: 1fr; }
+  .chart-grid { grid-template-columns: 1fr; }
+  .topbar { padding: 0.875rem 1rem; }
+  .page-title { font-size: 1.5rem; }
+  .section { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+}
+
+/* ---------- Utilities ---------- */
+.text-right { text-align: right; }
+.kpi-card .label {
+  font-size: 0.8rem; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 0.1rem;
+}
+.kpi-card .value {
+  font-size: 1.75rem; font-weight: 800; color: var(--text); line-height: 1.2;
+}
+.kpi-card .sub { font-size: 0.8rem; color: var(--text-muted); }
+.kpi-card .indicator {
+  display: flex; align-items: center; gap: 0.35rem; margin-top: 0.25rem;
+}
+.kpi-card .dot { width: 8px; height: 8px; border-radius: 50%; }
+.kpi-card .dot.up { background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+.kpi-card .dot.down { background: var(--danger); box-shadow: 0 0 8px var(--danger); }
+.kpi-collection   { border-top: 4px solid var(--primary); }
+.kpi-credit       { border-top: 4px solid var(--accent); }
+.kpi-debit        { border-top: 4px solid var(--warning); }
+.kpi-grand        { border-top: 5px solid #8b5cf6; }
+.kpi-avg          { border-top: 4px solid #8b5cf6; }
+.kpi-bestmonth    { border-top: 4px solid var(--info); }
+.kpi-bestday      { border-top: 4px solid #ec4899; }
