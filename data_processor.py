@@ -73,11 +73,11 @@ def load_sales_data(excel_path: str | Path = EXCEL_PATH) -> pd.DataFrame:
 def compute_kpis(df: pd.DataFrame) -> dict:
     """Top-line KPI values for the dashboard cards."""
     total_debit = float(df["Debit"].sum())
-    total_collection = float(df["Collection"].sum()) + total_debit
+    total_collection = float(df["Collection"].sum())
     total_credit = float(df["Credit"].sum())
     grand_total = float(df["Total"].sum())
     n_days = int(df["Date"].nunique())
-    avg_daily_collection = total_collection / n_days if n_days else 0.0
+    avg_daily_collection = (total_collection + total_debit) / n_days if n_days else 0.0
 
     monthly = (
         df.groupby("Month", as_index=False)[["Collection", "Credit", "Debit", "Total"]]
