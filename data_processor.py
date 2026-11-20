@@ -194,9 +194,19 @@ def recent_transactions(df: pd.DataFrame, limit: int = 12) -> list[dict]:
     } for _, row in recent.iterrows()]
 
 
-def load_all() -> dict:
-    """Convenience: load data + every aggregate the dashboard needs."""
+def load_all(start_date: str | None = None, end_date: str | None = None) -> dict:
+    """Convenience: load data + every aggregate the dashboard needs.
+    Optionally filter by inclusive date range (YYYY-MM-DD).
+    """
     df = load_sales_data()
+    if start_date:
+        df = df[df["Date"] >= pd.to_datetime(start_date)]
+    if end_date:
+        df = df[df["Date"] <= pd.to_datetime(end_date)]
+
+    date_min = df["Date"].min()
+    date_max = df["Date"].max()
+
     return {
         "kpis": compute_kpis(df),
         "monthly": monthly_summary(df),
@@ -205,5 +215,9 @@ def load_all() -> dict:
         "top_days": top_days(df),
         "recent": recent_transactions(df),
         "months": MONTH_ORDER,
+        "date_range": {
+            "min": date_min.strftime("%Y-%m-%d") if pd.notna(date_min) else "",
+            "max": date_max.strftime("%Y-%m-%d") if pd.notna(date_max) else "",
+        },
         "updated_at": datetime.now().strftime("%d %b %Y, %I:%M %p"),
     }

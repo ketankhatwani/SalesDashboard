@@ -1,5 +1,5 @@
 /* ============================================================
-   Sales Dashboard — Chart.js + UI logic
+   Sales Dashboard — Chart.js + UI logic (with date filter)
    ============================================================ */
 
 const CURRENCY = new Intl.NumberFormat("en-IN", {
@@ -8,11 +8,19 @@ const CURRENCY = new Intl.NumberFormat("en-IN", {
 
 let DATA = {
   kpis: {}, monthly: [], daily: [], weekday: [],
-  recent: [], top_days: [], months: [], updated_at: ""
+  recent: [], top_days: [], months: [], updated_at: "",
+  date_range: { min: "", max: "" }
 };
 
+const el = id => document.getElementById(id);
+const startDateInput = el("startDate");
+const endDateInput = el("endDate");
+const applyBtn = el("applyFilter");
+const resetBtn = el("resetFilter");
+const filterInfo = el("filterInfo");
+
 function fmt(n) { return CURRENCY.format(Number(n || 0)); }
-function el(id) { return document.getElementById(id); }
+function rupeeTick(v) { return "\u20B9" + v; }
 
 function themeInit() {
   const btn = el("themeToggle");
@@ -31,9 +39,13 @@ function themeInit() {
 }
 themeInit();
 
-async function loadData() {
+async function loadData(startDate, endDate) {
   try {
-    const res = await fetch("/api/data");
+    const params = new URLSearchParams();
+    if (startDate) params.set("start_date", startDate);
+    if (endDate) params.set("end_date", endDate);
+    const url = "/api/data?" + params.toString();
+    const res = await fetch(url);
     if (!res.ok) throw new Error("API returned " + res.status);
     DATA = await res.json();
   } catch (err) {
@@ -42,6 +54,27 @@ async function loadData() {
     if (empty) empty.style.display = "block";
   }
   return DATA;
+}
+
+function initDateInputs() {
+  if (!DATA.date_range) return;
+  if (startDateInput && DATA.date_range.min) startDateInput.min = DATA.date_range.min;
+  if (endDateInput && DATA.date_range.max) endDateInput.max = DATA.date_range.max;
+}
+
+function setFilterInfo() {
+  const start = startDateInput.value;
+  const end = endDateInput.value;
+  if (!start && !end) {
+    filterInfo.textContent = "Showing all data";
+    filterInfo.style.display = "none";
+    return;
+  }
+  let parts = [];
+  if (start) parts.push("From: " + start);
+  if (end) parts.push("To: " + end);
+  filterInfo.textContent = parts.join("  |  ");
+  filterInfo.style.display = "inline";
 }
 function renderKpis() {
   const grid = el("kpiGrid");
@@ -101,7 +134,6 @@ function renderKpis() {
     </div>
   `).join("");
 }
-
 const CHART_COLORS = {
   collection: "rgba(99, 102, 241, 1)",
   credit: "rgba(16, 185, 129, 1)",
@@ -109,8 +141,21 @@ const CHART_COLORS = {
   total: "rgba(139, 92, 246, 1)",
 };
 
-function rupeeTick(v) { return "\u20B9" + v; }
+function destroyCharts() {
+  if (typeof Chart === "undefined") return;
+  const instances = Chart.instances;
+  if (!instances) return;
+  // Chart.js v4 stores instances in a Map
+  if (typeof instances.forEach === "function") {
+    instances.forEach((inst) => { try { inst.destroy(); } catch (e) {} });
+  } else {
+    Object.values(instances).forEach((inst) => { try { inst.destroy(); } catch (e) {} });
+  }
+}
+
 function initCharts() {
+  destroyCharts();
+
   const monthly = DATA.monthly || [];
   const weekday = DATA.weekday || [];
 
@@ -209,10 +254,20 @@ function renderTables() {
   const top = DATA.top_days || [];
 
   renderTable("monthlyTable", monthly, [
-    "month", "days", "collection", "credit", "debit", "total", "avg_daily"
-  ].map((k) => ({ key: k, money: k !== "month" && k !== "days" })));
-  renderTable("recentTable", recent, ["date", "day", "collection", "credit", "debit", "total"].map((k) => ({ key: k, money: k !== "date" && k !== "day" })));
-  renderTable("topTable", top, ["date", "day", "collection", "credit", "debit", "total"].map((k) => ({ key: k, money: k !== "date" && k !== "day" })));
+    { key: "month", money: false }, { key: "days", money: false },
+    { key: "collection", money: true }, { key: "credit", money: true },
+    { key: "debit", money: true }, { key: "total", money: true }, { key: "avg_daily", money: true },
+  ]);
+  renderTable("recentTable", recent, [
+    { key: "date", money: false }, { key: "day", money: false },
+    { key: "collection", money: true }, { key: "credit", money: true },
+    { key: "debit", money: true }, { key: "total", money: true },
+  ]);
+  renderTable("topTable", top, [
+    { key: "date", money: false }, { key: "day", money: false },
+    { key: "collection", money: true }, { key: "credit", money: true },
+    { key: "debit", money: true }, { key: "total", money: true },
+  ]);
 }
 
 function setUpdated() {
@@ -220,12 +275,37 @@ function setUpdated() {
   if (v && DATA.updated_at) v.textContent = DATA.updated_at;
 }
 
-window.addEventListener("DOMContentLoaded", async () => {
-  await loadData();
+async function refreshDashboard() {
+  await loadData(startDateInput.value || undefined, endDateInput.value || undefined);
+  setFilterInfo();
+  initDateInputs();
   renderKpis();
-  initCharts();
-  renderTables();
+  renderTables();   // tables render independently of charts
   setUpdated();
+
+  // Charts in try-catch so a chart error never hides tables/KPIs
+  try {
+    initCharts();
+  } catch (err) {
+    console.error("Chart rendering error:", err);
+  }
+
+  const empty = el("emptyState");
+  const hasData = DATA.kpis && Object.keys(DATA.kpis).length > 0;
+  if (empty) empty.style.display = hasData ? "none" : "block";
+}
+
+window.addEventListener("DOMContentLoaded", async () => {
+  await refreshDashboard();
+});
+
+// Button listeners attached at module level (elements exist since script is at end of body)
+applyBtn.addEventListener("click", refreshDashboard);
+resetBtn.addEventListener("click", () => {
+  startDateInput.value = "";
+  endDateInput.value = "";
+  setFilterInfo();
+  refreshDashboard();
 });
 
 

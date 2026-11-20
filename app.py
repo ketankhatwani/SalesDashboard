@@ -7,7 +7,7 @@ browser-based dashboard with KPI cards, Chart.js charts and data tables.
 from __future__ import annotations
 
 import json
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, request
 
 from data_processor import load_all
 
@@ -24,12 +24,16 @@ def index():
 
 @app.route("/api/data")
 def api_data():
-    return jsonify(DASHBOARD_DATA)
+    start = request.args.get("start_date")
+    end = request.args.get("end_date")
+    return jsonify(load_all(start_date=start, end_date=end))
 
 
 @app.route("/api/kpis")
 def api_kpis():
-    return jsonify(DASHBOARD_DATA["kpis"])
+    start = request.args.get("start_date")
+    end = request.args.get("end_date")
+    return jsonify(load_all(start_date=start, end_date=end)["kpis"])
 
 
 if __name__ == "__main__":

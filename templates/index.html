@@ -9,7 +9,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <style>
     .card-icon { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; font-size: 1.35rem; margin-bottom: 0.5rem; }
-    .icon-bg { opacity: 0.15; }
+    .icon-bg { opacity: 1.15; }
   </style>
 </head>
 <body>
@@ -25,7 +25,18 @@
   <div class="container">
     <div>
       <h1 class="page-title">Sales Performance Overview</h1>
-      <p class="page-sub">September 2025 &rarr; March 2026 &nbsp;|&nbsp; All figures aggregated from monthly sheets</p>
+      <p class="page-sub">September 2025 &rarr; August 2026 &nbsp;|&nbsp; All figures aggregated from monthly sheets</p>
+    </div>
+
+    <!-- Date Range Filter -->
+    <div class="filter-bar">
+      <label for="startDate">From</label>
+      <input type="date" id="startDate">
+      <label for="endDate">To</label>
+      <input type="date" id="endDate">
+      <button id="applyFilter">Apply</button>
+      <button id="resetFilter">Reset</button>
+      <span class="filter-info" id="filterInfo"></span>
     </div>
 
     <!-- KPI Cards -->
@@ -38,19 +49,19 @@
     <div class="chart-grid">
       <div class="chart-card">
         <h3><span class="card-icon icon-bg">&#128206;</span>Monthly Total Trend</h3>
-        <div class="chart-wrap"><canvas id="trendChart"></canvas></div>
+        <div class="chart-wrap"><canvas id="trendChart" width="700" height="300"></canvas></div>
       </div>
       <div class="chart-card">
         <h3><span class="card-icon icon-bg">&#128204;</span>Collection vs Credit vs Debit</h3>
-        <div class="chart-wrap"><canvas id="mixChart"></canvas></div>
+        <div class="chart-wrap"><canvas id="mixChart" width="700" height="300"></canvas></div>
       </div>
       <div class="chart-card">
         <h3><span class="card-icon icon-bg">&#128197;</span>Performance by Day of Week</h3>
-        <div class="chart-wrap"><canvas id="weekdayChart"></canvas></div>
+        <div class="chart-wrap"><canvas id="weekdayChart" width="700" height="300"></canvas></div>
       </div>
       <div class="chart-card">
         <h3><span class="card-icon icon-bg">&#128202;</span>Monthly Totals</h3>
-        <div class="chart-wrap"><canvas id="monthlyBarChart"></canvas></div>
+        <div class="chart-wrap"><canvas id="monthlyBarChart" width="700" height="300"></canvas></div>
       </div>
     </div>
 

@@ -22,7 +22,7 @@
   --transition: 0.25s ease;
 }
 .dark {
-  --bg: #0b1021;
+  --bg: #1f2848;
   --card: #121933;
   --text: #e2e8f0;
   --text-muted: #94a3b8;
@@ -190,3 +190,41 @@ tr:hover td { background: rgba(99, 102, 241, 0.04); }
 .kpi-avg          { border-top: 4px solid #8b5cf6; }
 .kpi-bestmonth    { border-top: 4px solid var(--info); }
 .kpi-bestday      { border-top: 4px solid #ec4899; }
+.kpi-bestday      { border-top: 4px solid #ec4899; }
+
+/* ---------- Date Range Filter ---------- */
+.filter-bar {
+  display: flex; align-items: center; gap: 0.75rem;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 1rem 1.5rem;
+  box-shadow: var(--shadow-sm); margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+.filter-bar label {
+  font-size: 0.8rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.4px; color: var(--text-muted);
+}
+.filter-bar input[type="date"] {
+  padding: 0.5rem 0.75rem; border: 1px solid var(--border);
+  border-radius: var(--radius-sm); background: var(--bg);
+  color: var(--text); font-size: 0.9rem; min-width: 150px;
+}
+.filter-bar button {
+  padding: 0.5rem 1rem; border: 1px solid var(--border);
+  border-radius: var(--radius-sm); background: var(--card);
+  color: var(--text); cursor: pointer; font-size: 0.9rem;
+  transition: all var(--transition);
+}
+.filter-bar button:hover {
+  background: var(--primary-light); border-color: var(--primary);
+}
+.filter-bar #resetFilter:hover {
+  background: rgba(239, 68, 68, 0.1); border-color: var(--danger); color: var(--danger);
+}
+.filter-info {
+  font-size: 0.85rem; color: var(--text-muted);
+  margin-left: 1rem; font-style: italic;
+}
+
+/* ---------- Utilities ---------- */
+.text-right { text-align: right; }
